@@ -154,21 +154,22 @@ decodeRequestTree req = do
 
 
 updateFromZipper :: (?modelContext :: ModelContext) => [Task] -> TreePos Full UUID -> Maybe UUID -> Int -> IO ()
-updateFromZipper tasks nz parentId weight = do
-    let currentUUID = label nz
+updateFromZipper tasks zipper parentId weight = do
+    let currentUUID = label zipper
     updateItem tasks currentUUID parentId weight
 
     -- Update children
-    let childrenZip = firstChild nz
-    case childrenZip of
-        Just cz -> go cz 1  -- start numbering children from 1
+    let childrenZipper = firstChild zipper
+    case childrenZipper of
+        -- start numbering children from 1
+        Just childZipper -> go childZipper 1
         Nothing -> return ()
     where
-        go cz w = do
-            updateFromZipper tasks cz (Just $ label nz) w
-            let nextCz = next cz
-            case nextCz of
-                Just ncz -> go ncz (w + 1)
+        go childZipper childWeight = do
+            updateFromZipper tasks childZipper (Just $ label zipper) childWeight
+            let nextChildrenZipper = next childZipper
+            case nextChildrenZipper of
+                Just nextChildZipper -> go nextChildZipper (childWeight + 1)
                 Nothing  -> return ()
 
 
