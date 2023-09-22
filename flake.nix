@@ -29,6 +29,7 @@
                         wai
                         text
                         hlint
+                        rosezipper
                     ];
                 };
             };

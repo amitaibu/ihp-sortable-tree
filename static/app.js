@@ -15,7 +15,7 @@ $(document).on('ready turbolinks:load', function () {
 
             onChange: async ({ nodes, movedNode, srcParentNode, targetParentNode }) => {
                 const urlParams = new URLSearchParams(window.location.search);
-                const learningMapNameId = urlParams.get('learningMapNameId');
+                const taskId = urlParams.get('taskId');
                 const filterNodes = function(nodes) {
                     return nodes.map(node => {
                         let newNode = {
@@ -39,7 +39,7 @@ $(document).on('ready turbolinks:load', function () {
                 const filteredNodes = filterNodes(nodes);
 
                 try {
-                    const response = await fetch('/UpdateSortLearningMapProductItem?learningMapNameId=' + learningMapNameId, {
+                    const response = await fetch('/UpdateSortTask?taskId=' + taskId, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
