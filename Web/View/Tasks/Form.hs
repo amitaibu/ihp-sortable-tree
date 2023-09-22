@@ -1,7 +1,6 @@
 module Web.View.Tasks.Form where
 
 import Web.View.Prelude
-import Text.Blaze.Html4.FrameSet.Attributes (href)
 
 renderForm :: Task -> [Task] ->  Html
 renderForm task children = formFor task [hsx|
