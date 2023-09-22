@@ -1,8 +1,7 @@
 $(document).on('ready turbolinks:load', function () {
     const container = document.getElementById('treeContainer');
     if (!!container) {
-        // @todo: Pass the array from IHP.
-        const nodes = [JSON.parse(container.getAttribute('data-tree'))];
+        const nodes = JSON.parse(container.getAttribute('data-tree'));
 
         const tree = new SortableTree({
             nodes: nodes,

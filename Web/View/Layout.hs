@@ -36,7 +36,6 @@ defaultLayout inner = [hsx|
 stylesheets :: Html
 stylesheets = [hsx|
         <link rel="stylesheet" href={assetPath "/vendor/flatpickr.min.css"}/>
-        {- @todo: Change to local -}
         <link rel="stylesheet" href="https://unpkg.com/sortable-tree/dist/sortable-tree.css"/>
         <link rel="stylesheet" href={assetPath "/app.css"}/>
     |]
@@ -51,7 +50,6 @@ scripts = [hsx|
         <script src={assetPath "/vendor/turbolinks.js"}></script>
         <script src={assetPath "/vendor/turbolinksInstantClick.js"}></script>
         <script src={assetPath "/vendor/turbolinksMorphdom.js"}></script>
-        {- @todo: Change to local -}
         <script src="https://unpkg.com/sortable-tree/dist/sortable-tree.js"></script>
         <script src={assetPath "/helpers.js"}></script>
         <script src={assetPath "/ihp-auto-refresh.js"}></script>

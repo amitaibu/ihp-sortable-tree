@@ -93,7 +93,7 @@ getIndexView = do
     pure IndexView { .. }
 
 tasksToTreeJson :: (?context :: ControllerContext) => [Task] -> Value
-tasksToTreeJson tasks = toJSON pseudoRoot
+tasksToTreeJson tasks = toJSON [pseudoRoot]
     where
         newTask = newRecord @Task
 
