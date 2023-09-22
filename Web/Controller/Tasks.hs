@@ -14,9 +14,8 @@ import qualified Data.Text.Lazy as TL
 
 instance Controller TasksController where
     action TasksAction = do
-        tasks <- query @Task |> fetch
-        let newTask = newRecord @Task
-        render IndexView { .. }
+        indexView <- getIndexView
+        render indexView
 
     action UpdateTaskAction { taskId } = do
         task <- fetch taskId
