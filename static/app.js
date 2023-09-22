@@ -6,7 +6,6 @@ $(document).on('ready turbolinks:load', function () {
 
         const tree = new SortableTree({
             nodes: nodes,
-            // No collapse.
             initCollapseLevel: 10,
             element: document.querySelector('#treeContainer'),
             renderLabel: (data) => {
@@ -14,8 +13,6 @@ $(document).on('ready turbolinks:load', function () {
             },
 
             onChange: async ({ nodes, movedNode, srcParentNode, targetParentNode }) => {
-                const urlParams = new URLSearchParams(window.location.search);
-                const taskId = urlParams.get('taskId');
                 const filterNodes = function(nodes) {
                     return nodes.map(node => {
                         let newNode = {
@@ -39,7 +36,7 @@ $(document).on('ready turbolinks:load', function () {
                 const filteredNodes = filterNodes(nodes);
 
                 try {
-                    const response = await fetch('/UpdateSortTask?taskId=' + taskId, {
+                    const response = await fetch('/UpdateSortTasks', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
