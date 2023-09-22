@@ -6,11 +6,10 @@ import Web.View.Layout (defaultLayout)
 
 -- Controller Imports
 import Web.Controller.Tasks
-import Web.Controller.Static
 
 instance FrontController WebApplication where
-    controllers = 
-        [ startPage WelcomeAction
+    controllers =
+        [ startPage TasksAction
         -- Generator Marker
         , parseRoute @TasksController
         ]

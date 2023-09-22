@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+    .container-wide {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-20;
+    }
+
+    .container-narrow {
+        @apply max-w-3xl mx-auto px-4 md:px-10 lg:px-8 xl:px-20;
+    }
+
+    button.disabled {
+        @apply bg-gray-300 text-gray-500;
+    }
+
+    button.enabled {
+        @apply bg-blue-500 hover:bg-blue-700 text-white;
+    }
+}
+
+/* Override value from the default sortable-tree  */
+sortable-tree-node > :first-child {
+    @apply h-full;
+}
+
+.tree {
+    --st-label-height: 3.75rem;
+    --st-subnodes-padding-left: 3rem;
+    --st-collapse-icon-width: 1.5rem;
+    --st-collapse-icon-height: 3.75rem;
+    --st-collapse-icon-size: 0.9rem;
+    --background: white;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem 0;
+}
+  .tree__label {
+    display: flex;
+    padding: 4px;
+    font-size: 1rem;
+    font-weight: 480;
+    cursor: move;
+  }
+  .tree__label:hover {
+    z-index: 2;
+    --color: var(--hover-color);
+    --background: var(--hover-background);
+  }
+  .tree__label:after {
+    content: '';
+    position: absolute;
+    z-index: 4;
+    inset: -2px 2px;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    transition: border-color 0.2s;
+    pointer-events: none;
+  }
+  .tree__label > span {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 2px solid;
+    border-radius: 6px;
+    color: var(--color);
+    background-color: var(--background);
+    transition: color 0.2s, background 0.2s;
+  }
+  .tree__collapse > * {
+    box-sizing: content-box;
+    margin-left: -5px;
+    padding: 5px;
+    background-color: var(--background);
+  }
+  .tree__node--drop-before > .tree__label:after {
+    border-top-color: var(--accent-color);
+  }
+  .tree__node--drop-after > .tree__label:after {
+    border-bottom-color: var(--accent-color);
+  }
+  .tree__node--drop-inside > .tree__label {
+    z-index: 3;
+    --color: var(--accent-color);
+    --background: var(--accent-background);
+  }
+  .tree__node--dragging .tree__label > span {
+    border-style: dashed;
+    cursor: move !important;
+  }
+  .tree__subnodes .tree__node {
+    --line-color: hsl(217, 12%, 22%);
+    --line-radius: 8px;
+    position: relative;
+  }
+  .tree__subnodes .tree__node:not(:last-child):before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    left: calc((var(--st-subnodes-padding-left) / -2) + 8px);
+    border-left: 2px solid var(--line-color);
+  }
+  .tree__subnodes .tree__label > span {
+    position: relative;
+  }
+  .tree__subnodes .tree__label > span:before {
+    content: '';
+    position: absolute;
+    left: -1.4rem;
+    top: -6px;
+    height: calc(100% + 6px);
+    width: var(--line-radius);
+    border-left: 2px solid var(--line-color);
+    border-bottom-left-radius: var(--line-radius);
+    mix-blend-mode: lighten;
+  }
+  :last-child > .tree__subnodes .tree__label > span:before {
+    height: calc(50% + 6px);
+  }
+  .tree__subnodes .tree__label > span:after {
+    content: '';
+    position: absolute;
+    left: -1.4rem;
+    top: 0;
+    width: calc(1.4rem - 4px);
+    height: 50%;
+    border-bottom: 2px solid var(--line-color);
+    border-bottom-left-radius: var(--line-radius);
+    mix-blend-mode: lighten;
+  }
+  .tree__collapse {
+    z-index: 3;
+  }
+  .my-icon {
+    margin-left: -0.32rem;
+    padding: 0.2;
+    font-size: 0.85rem;
+    background-color: var(--background);
+  }
+  .my-tree {
+    margin: 2rem 0;
+  }
