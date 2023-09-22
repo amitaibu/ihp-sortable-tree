@@ -35,10 +35,11 @@ instance Controller TasksController where
             |> buildTask
             |> ifValid \case
                 Left task -> do
+                    error $ show task
                     indexView <- getIndexView
                     render indexView
                 Right task -> do
-                    task <- task |> updateRecord
+                    task <- task |> createRecord
                     redirectTo TasksAction
 
     action DeleteTaskAction { taskId } = do
