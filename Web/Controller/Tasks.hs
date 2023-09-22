@@ -59,7 +59,13 @@ instance Controller TasksController where
                     redirectTo TasksAction
 
     action CreateTaskAction = do
-        let task = newRecord @Task
+        tasksCount <- query @Task
+            -- Find root tasks (tasks without a parent).
+            |> filterWhere (#taskId, Nothing)
+            |> fetchCount
+
+        let task = newRecord @Task |> set #weight tasksCount
+
         task
             |> buildTask
             |> ifValid \case
