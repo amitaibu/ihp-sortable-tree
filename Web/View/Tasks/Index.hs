@@ -11,10 +11,12 @@ data IndexView = IndexView
 
 instance View IndexView where
     html IndexView { .. } = [hsx|
-        <div data-tree={encode treeJson} id="treeContainer"></div>
-        <div class="flex flex-col gap-4">
-            <h2>Add New Task</h2>
-            <div>{renderForm newTask []}</div>
+        <div class="container-wide">
+            <div data-tree={encode treeJson} id="treeContainer"></div>
+            <div class="flex flex-col gap-4">
+                <h2 class="text-2xl">Add New Task</h2>
+                <div>{renderForm newTask []}</div>
+            </div>
         </div>
     |]
 

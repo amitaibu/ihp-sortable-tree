@@ -205,10 +205,7 @@ customTailwind = def
             |]
 
 
-        -- By default we disable the submit button. We can't mark it as disabled,
-        -- since IHP doesn't allow it. So we'll start with CSS showing as disabled,
-        -- and JS will follow.
-        styledSubmitButtonClass = "disabled font-bold py-2 px-4 rounded"
+        styledSubmitButtonClass = "font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-700 text-white"
 
         styledFormFieldHelp _ FormField { helpText = "" } = mempty
         styledFormFieldHelp _ FormField { helpText } = [hsx|<p class="text-gray-600 text-xs italic">{helpText}</p>|]
