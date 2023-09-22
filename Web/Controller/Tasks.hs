@@ -70,9 +70,9 @@ instance Controller TasksController where
             |> buildTask
             |> ifValid \case
                 Left task -> do
-                    error $ show task
                     indexView <- getIndexView
-                    render indexView
+                    -- Pass the erroring task to the view, so we can render the errors.
+                    render $ indexView {newTask = task}
                 Right task -> do
                     task <- task |> createRecord
                     redirectTo TasksAction
@@ -84,6 +84,7 @@ instance Controller TasksController where
 
 buildTask task = task
     |> fill @'["body"]
+    |> validateField #body nonEmpty
 
 getIndexView :: (?modelContext :: ModelContext, ?context :: ControllerContext) => IO IndexView
 getIndexView = do
