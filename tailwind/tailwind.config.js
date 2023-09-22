@@ -5,18 +5,6 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                'blue-gray': {
-                    100: '#F1F5F9',
-                    600: '#475569',
-                },
-                'pp': {
-                    'purple': '#6002EE',
-                    'teal': '#6DD7BA',
-
-                },
-                'teal': {
-                    600: '#0D9488',
-                }
             }
         },
     },
@@ -31,6 +19,5 @@ module.exports = {
     ],
     plugins: [
         require('@tailwindcss/forms'),
-        require('@tailwindcss/typography'),
     ],
 };
