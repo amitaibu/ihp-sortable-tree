@@ -80,7 +80,6 @@ instance Controller TasksController where
     action DeleteTaskAction { taskId } = do
         task <- fetch taskId
         deleteRecord task
-        setSuccessMessage "Task deleted"
         redirectTo TasksAction
 
 buildTask task = task
