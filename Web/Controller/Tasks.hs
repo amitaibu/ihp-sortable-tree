@@ -155,8 +155,9 @@ decodeRequestTree req = do
 
 updateFromZipper :: (?modelContext :: ModelContext) => [Task] -> TreePos Full UUID -> Maybe UUID -> Int -> IO ()
 updateFromZipper tasks zipper parentId weight = do
-    let currentUUID = label zipper
-    updateItem tasks currentUUID parentId weight
+    -- The currently focused task's UUID.
+    let uuid = label zipper
+    updateItem tasks uuid parentId weight
 
     -- Update children
     let childrenZipper = firstChild zipper
@@ -193,4 +194,4 @@ updateItem tasks uuid mParentId weight =
                         else Just parentId
                     Nothing -> Nothing
 
-        _ -> error $ "Warning: No matching task found for UUID: " ++ show uuid
+        _ -> pure ()
