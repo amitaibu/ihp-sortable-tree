@@ -16,7 +16,7 @@ renderForm task children = formFor task [hsx|
     |]
         where deleteLink
                 -- Show delete link only if there are no children.
-                | isEmpty children = [hsx|<a href={DeleteTaskAction task.id} class="js-delete text-sm hover:underline">Delete</a>|]
+                | isEmpty children && not (isNew task) = [hsx|<a href={DeleteTaskAction task.id} class="js-delete text-sm hover:underline">Delete</a>|]
                 | otherwise = ""
 
 
