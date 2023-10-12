@@ -28,21 +28,21 @@ instance Controller TasksController where
         case decodedTree of
             Right uuidTree -> do
                 tasks <- query @Task |> fetch
+                let actualTree = unUUIDTree uuidTree
+                let zipper = fromTree actualTree
 
                 -- Go over the tree and update the weights and the reference to the parent,
                 -- if there is one.
                 -- If the level is 0, then we should not reference any parent.
                 -- They way we should do it, is by going over the tree with a zipper
                 -- so we can know the level and weight of each element, and the
-                updateFromZipper tasks zipper Nothing 0
+                tasksUpdated <- updateFromZipper tasks zipper Nothing 0
 
                 -- Return the updated tree.
                 -- @todo: Don't query DB again.
                 tasksUpdated <- query @Task |> fetch
                 renderJson (tasksToTreeJson tasksUpdated)
-                where
-                    actualTree = unUUIDTree uuidTree
-                    zipper = fromTree actualTree
+
             Left err ->
                 error $ show err
 
@@ -163,37 +163,37 @@ decodeRequestTree req = do
     return $ eitherDecode (cs requestBody)
 
 
-updateFromZipper :: (?modelContext :: ModelContext) => [Task] -> TreePos Full UUID -> Maybe UUID -> Int -> IO ()
+updateFromZipper :: (?modelContext :: ModelContext) => [Task] -> TreePos Full UUID -> Maybe UUID -> Int -> IO [Task]
 updateFromZipper tasks zipper parentId weight = do
     -- The currently focused task's UUID.
     let uuid = label zipper
-    updateItem tasks uuid parentId weight
+    updatedTasks <- updateItem tasks uuid parentId weight
 
     -- Update children
     let childrenZipper = firstChild zipper
     case childrenZipper of
         -- start numbering children from 1
         Just childZipper -> go childZipper 1
-        Nothing -> return ()
+        Nothing -> return updatedTasks
     where
         go childZipper childWeight = do
-            updateFromZipper tasks childZipper (Just $ label zipper) childWeight
+            newUpdatedTasks <- updateFromZipper tasks childZipper (Just $ label zipper) childWeight
             let nextChildrenZipper = next childZipper
             case nextChildrenZipper of
                 Just nextChildZipper -> go nextChildZipper (childWeight + 1)
-                Nothing  -> return ()
+                Nothing  -> return newUpdatedTasks
 
 
-updateItem :: (?modelContext :: ModelContext) =>[Task] -> UUID -> Maybe UUID -> Int -> IO ()
+updateItem :: (?modelContext :: ModelContext) =>[Task] -> UUID -> Maybe UUID -> Int -> IO [Task]
 updateItem tasks uuid mParentId weight =
     let matchingTasks = filter (\item -> item.id == Id uuid) tasks
     in case matchingTasks of
-        (task:_) -> do
-            task
+        (task : otherTasks) -> do
+            taskUpdated <- task
                 |> set #weight weight
                 |> set #taskId parentId
                 |> updateRecord
-            pure ()
+            pure $ taskUpdated : otherTasks
             where
                 newTask = newRecord @Task
                 (Id newTaskUuid) = newTask.id
@@ -204,4 +204,4 @@ updateItem tasks uuid mParentId weight =
                         else Just parentId
                     Nothing -> Nothing
 
-        _ -> pure ()
+        _ -> pure tasks
