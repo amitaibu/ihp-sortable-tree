@@ -37,10 +37,6 @@ instance Controller TasksController where
                 -- They way we should do it, is by going over the tree with a zipper
                 -- so we can know the level and weight of each element, and the
                 tasksUpdated <- updateFromZipper tasks zipper Nothing 0
-
-                -- Return the updated tree.
-                -- @todo: Don't query DB again.
-                tasksUpdated <- query @Task |> fetch
                 renderJson (tasksToTreeJson tasksUpdated)
 
             Left err ->
@@ -185,15 +181,15 @@ updateFromZipper tasks zipper parentId weight = do
 
 
 updateItem :: (?modelContext :: ModelContext) =>[Task] -> UUID -> Maybe UUID -> Int -> IO [Task]
-updateItem tasks uuid mParentId weight =
-    let matchingTasks = filter (\item -> item.id == Id uuid) tasks
-    in case matchingTasks of
-        (task : otherTasks) -> do
+updateItem tasks uuid mParentId weight = do
+    let maybeTask = filter (\item -> item.id == Id uuid) tasks |> head
+    maybeTaskUpdated <- case maybeTask of
+        Just task -> do
             taskUpdated <- task
                 |> set #weight weight
                 |> set #taskId parentId
                 |> updateRecord
-            pure $ taskUpdated : otherTasks
+            pure $ Just taskUpdated
             where
                 newTask = newRecord @Task
                 (Id newTaskUuid) = newTask.id
@@ -204,4 +200,8 @@ updateItem tasks uuid mParentId weight =
                         else Just parentId
                     Nothing -> Nothing
 
-        _ -> pure tasks
+        _ -> pure Nothing
+
+    pure $ case maybeTaskUpdated of
+            Just taskUpdated -> fmap (\task -> if task.id == taskUpdated.id then taskUpdated else task) tasks
+            Nothing -> tasks
