@@ -35,7 +35,11 @@ instance Controller TasksController where
                 -- They way we should do it, is by going over the tree with a zipper
                 -- so we can know the level and weight of each element, and the
                 updateFromZipper tasks zipper Nothing 0
-                renderJson (tasksToTreeJson tasks)
+
+                -- Return the updated tree.
+                -- @todo: Don't query DB again.
+                tasksUpdated <- query @Task |> fetch
+                renderJson (tasksToTreeJson tasksUpdated)
                 where
                     actualTree = unUUIDTree uuidTree
                     zipper = fromTree actualTree
