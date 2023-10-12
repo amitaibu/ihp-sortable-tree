@@ -24,23 +24,23 @@ import Data.Tree.Zipper
 instance Controller TasksController where
 
     action UpdateSortTasksAction = do
-            decodedTree <- decodeRequestTree request
-            case decodedTree of
-                Right uuidTree -> do
-                    tasks <- query @Task |> fetch
+        decodedTree <- decodeRequestTree request
+        case decodedTree of
+            Right uuidTree -> do
+                tasks <- query @Task |> fetch
 
-                    -- Go over the tree and update the weights and the reference to the parent,
-                    -- if there is one.
-                    -- If the level is 0, then we should not reference any parent.
-                    -- They way we should do it, is by going over the tree with a zipper
-                    -- so we can know the level and weight of each element, and the
-                    updateFromZipper tasks zipper Nothing 0
-                    redirectTo TasksAction
-                    where
-                        actualTree = unUUIDTree uuidTree
-                        zipper = fromTree actualTree
-                Left err ->
-                    error $ show err
+                -- Go over the tree and update the weights and the reference to the parent,
+                -- if there is one.
+                -- If the level is 0, then we should not reference any parent.
+                -- They way we should do it, is by going over the tree with a zipper
+                -- so we can know the level and weight of each element, and the
+                updateFromZipper tasks zipper Nothing 0
+                renderJson (tasksToTreeJson tasks)
+                where
+                    actualTree = unUUIDTree uuidTree
+                    zipper = fromTree actualTree
+            Left err ->
+                error $ show err
 
     action TasksAction = do
         indexView <- getIndexView
